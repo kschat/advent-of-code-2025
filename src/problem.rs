@@ -70,8 +70,8 @@ pub trait Problem {
         print!("{answer1}{answer2}");
 
         if metrics.enabled {
-            println!("");
-            println!("🎁 Metrics");
+            println!();
+            println!("{}", "🎁 Metrics".bold());
 
             if let Some(parsing) = metrics.parsing {
                 println!(
