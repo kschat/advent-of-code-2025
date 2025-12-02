@@ -1,4 +1,8 @@
-use std::{fmt::Display, fs, path::Path};
+use std::{
+    fmt::{Debug, Display},
+    fs,
+    path::Path,
+};
 
 use crate::{
     cli::{Part, RunConfig},
@@ -11,7 +15,7 @@ use humanize_duration::{Truncate, prelude::DurationExt};
 const PADDING: &str = "   ";
 
 pub trait Problem {
-    type Input;
+    type Input: Debug;
     type Answer1: Display;
     type Answer2: Display;
 
@@ -48,6 +52,11 @@ pub trait Problem {
                 error @ Error::Parse(..) => error,
                 error => Error::Parse(path.to_path_buf(), error.to_string()),
             })?;
+
+        if config.verbose {
+            println!("{PADDING}Parsing output:");
+            println!("{PADDING}{input:#?}");
+        }
 
         let answer1 = match config.part {
             Part::One | Part::Both => {
