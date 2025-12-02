@@ -1,2 +1,2 @@
 [alias]
-aoc = "run --"
+aoc = "run --release --"
