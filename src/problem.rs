@@ -76,27 +76,27 @@ pub trait Problem {
             if let Some(parsing) = metrics.parsing {
                 println!(
                     "{PADDING}Parsing: {}",
-                    parsing.human(Truncate::Micro).to_string().green()
+                    parsing.human(Truncate::Micro).to_string().yellow()
                 );
             }
 
             if let Some(part1) = metrics.part1 {
                 println!(
                     "{PADDING}Part 1:  {}",
-                    part1.human(Truncate::Micro).to_string().green()
+                    part1.human(Truncate::Micro).to_string().yellow()
                 );
             }
 
             if let Some(part2) = metrics.part2 {
                 println!(
                     "{PADDING}Part 2:  {}",
-                    part2.human(Truncate::Micro).to_string().green()
+                    part2.human(Truncate::Micro).to_string().yellow()
                 );
             }
 
             println!(
                 "{PADDING}Total:   {}",
-                metrics.total.human(Truncate::Micro).to_string().green()
+                metrics.total.human(Truncate::Micro).to_string().yellow()
             );
         }
 

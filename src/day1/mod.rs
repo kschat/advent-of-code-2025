@@ -4,24 +4,22 @@ use anyhow::{Context, anyhow};
 
 use crate::{cli::RunConfig, error::Error, problem::Problem};
 
-pub struct Day1 {
-    config: RunConfig,
+pub struct Day1<'a> {
+    config: &'a RunConfig,
 }
 
-impl Day1 {
-    pub fn new(config: &RunConfig) -> Self {
-        Self {
-            config: config.clone(),
-        }
+impl<'a> Day1<'a> {
+    pub fn new(config: &'a RunConfig) -> Self {
+        Self { config }
     }
 }
 
-impl Problem for Day1 {
+impl Problem for Day1<'_> {
     type Input = Vec<Rotation>;
     type Answer1 = u16;
     type Answer2 = u16;
 
-    const PATH: &str = "./src/day1/input.txt";
+    const PATH: &'static str = "./src/day1/input.txt";
 
     fn parse(&self, content: &str, _path: &Path) -> Result<Self::Input, Error> {
         content
@@ -88,7 +86,7 @@ pub struct Rotation {
 impl Rotation {
     pub fn parse(value: &str) -> Result<Self, Error> {
         let (direction, value) = match value.split_at(1) {
-            ("L", value) => (Direction::Left, -1 * Self::parse_value(value)?),
+            ("L", value) => (Direction::Left, -Self::parse_value(value)?),
             ("R", value) => (Direction::Right, Self::parse_value(value)?),
             value => {
                 return Err(anyhow!("Failed to parse rotation {value:?}").into());
