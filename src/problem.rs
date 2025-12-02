@@ -3,8 +3,10 @@ use std::{fmt::Display, fs, path::Path};
 use crate::{
     cli::{Part, RunConfig},
     error::{Error, ResultExt},
+    metrics::Metrics,
 };
 use colored::Colorize;
+use humanize_duration::{Truncate, prelude::DurationExt};
 
 const PADDING: &str = "   ";
 
@@ -37,25 +39,66 @@ pub trait Problem {
 
         let path = Path::new(Self::PATH);
         let content = self.read_file(path)?;
-        let input = self.parse(&content, path)?;
+
+        let mut metrics = Metrics::start(config.metrics);
+
+        let input = metrics
+            .track_parsing(|| self.parse(&content, path))
+            .map_err(|error| match error {
+                error @ Error::Parse(..) => error,
+                error => Error::Parse(path.to_path_buf(), error.to_string()),
+            })?;
 
         let answer1 = match config.part {
             Part::One | Part::Both => {
-                let answer = self.part1(&input).format();
-                format!("{PADDING}Part 1: {answer}\n")
+                let answer = metrics.track_part1(|| self.part1(&input)).format();
+                format!("{PADDING}Part 1:  {answer}\n")
             }
             _ => "".into(),
         };
 
         let answer2 = match config.part {
             Part::Two | Part::Both => {
-                let answer = self.part2(&input).format();
-                format!("{PADDING}Part 2: {answer}\n")
+                let answer = metrics.track_part2(|| self.part2(&input)).format();
+                format!("{PADDING}Part 2:  {answer}\n")
             }
             _ => "".into(),
         };
 
+        metrics = metrics.finish();
+
         print!("{answer1}{answer2}");
+
+        if metrics.enabled {
+            println!("");
+            println!("🎁 Metrics");
+
+            if let Some(parsing) = metrics.parsing {
+                println!(
+                    "{PADDING}Parsing: {}",
+                    parsing.human(Truncate::Micro).to_string().green()
+                );
+            }
+
+            if let Some(part1) = metrics.part1 {
+                println!(
+                    "{PADDING}Part 1:  {}",
+                    part1.human(Truncate::Micro).to_string().green()
+                );
+            }
+
+            if let Some(part2) = metrics.part2 {
+                println!(
+                    "{PADDING}Part 2:  {}",
+                    part2.human(Truncate::Micro).to_string().green()
+                );
+            }
+
+            println!(
+                "{PADDING}Total:   {}",
+                metrics.total.human(Truncate::Micro).to_string().green()
+            );
+        }
 
         Ok(())
     }

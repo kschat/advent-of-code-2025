@@ -11,7 +11,7 @@ pub enum Command {
     Run(RunConfig),
 }
 
-#[derive(Debug, clap::Args)]
+#[derive(Debug, clap::Args, Clone)]
 pub struct RunConfig {
     /// Which day to run
     #[arg(short, long, value_parser = clap::value_parser!(u8).range(1..=12))]
@@ -20,6 +20,14 @@ pub struct RunConfig {
     /// The part for the selected day to run
     #[arg(short, long, value_enum, default_value_t)]
     pub part: Part,
+
+    /// Enable verbose output
+    #[arg(short, long, default_value_t)]
+    pub verbose: bool,
+
+    /// Enable measuring the time it took to complete the problem
+    #[arg(short, long, default_value_t)]
+    pub metrics: bool,
 }
 
 #[derive(Clone, Debug, clap::ValueEnum, Default, PartialEq, Eq)]

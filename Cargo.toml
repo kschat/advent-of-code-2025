@@ -10,5 +10,6 @@ path = "src/main.rs"
 [dependencies]
 anyhow = "1.0"
 clap = { version = "4.5.51", features = ["derive"] }
-thiserror = "2.0.17"
 colored = "3"
+humanize-duration = "0.0.7"
+thiserror = "2.0.17"

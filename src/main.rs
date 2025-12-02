@@ -7,6 +7,7 @@ use problem::Problem;
 
 mod cli;
 mod error;
+mod metrics;
 mod problem;
 
 mod day1;
@@ -14,7 +15,7 @@ mod day1;
 fn run() -> Result<(), Error> {
     match Cli::parse().command {
         Command::Run(config) => match config.day {
-            1 => Day1.run(&config),
+            1 => Day1::new(&config).run(&config),
             _ => Err(Error::Unimplemented),
         },
     }
