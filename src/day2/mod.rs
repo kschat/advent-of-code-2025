@@ -17,12 +17,17 @@ impl<'a> Day2<'a> {
     }
 }
 
-impl Problem for Day2<'_> {
+impl<'a> Problem<'a> for Day2<'a> {
     type Input = Vec<ProductId>;
     type Answer1 = usize;
     type Answer2 = usize;
 
-    const PATH: &'static str = "./src/day2/input.txt";
+    fn init(config: &'a RunConfig) -> Self
+    where
+        Self: Sized,
+    {
+        Self { config }
+    }
 
     fn parse(&self, content: &str, _path: &Path) -> Result<Self::Input, Error> {
         content
@@ -54,7 +59,7 @@ impl Problem for Day2<'_> {
 
                 Some(id.as_usize())
             })
-            .fold(0, |acc, id| acc + id);
+            .sum();
 
         Ok(result)
     }
@@ -94,7 +99,7 @@ impl Problem for Day2<'_> {
                     Some(id.as_usize())
                 })
             })
-            .fold(0, |acc, id| acc + id);
+            .sum();
 
         Ok(result)
     }
