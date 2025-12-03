@@ -11,12 +11,6 @@ pub struct Day2<'a> {
     config: &'a RunConfig,
 }
 
-impl<'a> Day2<'a> {
-    pub fn new(config: &'a RunConfig) -> Self {
-        Self { config }
-    }
-}
-
 impl<'a> Problem<'a> for Day2<'a> {
     type Input = Vec<ProductId>;
     type Answer1 = usize;

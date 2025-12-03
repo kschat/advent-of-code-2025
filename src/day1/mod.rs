@@ -8,12 +8,6 @@ pub struct Day1<'a> {
     config: &'a RunConfig,
 }
 
-impl<'a> Day1<'a> {
-    pub fn new(config: &'a RunConfig) -> Self {
-        Self { config }
-    }
-}
-
 impl<'a> Problem<'a> for Day1<'a> {
     type Input = Vec<Rotation>;
     type Answer1 = u16;
