@@ -14,12 +14,17 @@ impl<'a> Day1<'a> {
     }
 }
 
-impl Problem for Day1<'_> {
+impl<'a> Problem<'a> for Day1<'a> {
     type Input = Vec<Rotation>;
     type Answer1 = u16;
     type Answer2 = u16;
 
-    const PATH: &'static str = "./src/day1/input.txt";
+    fn init(config: &'a RunConfig) -> Self
+    where
+        Self: Sized,
+    {
+        Self { config }
+    }
 
     fn parse(&self, content: &str, _path: &Path) -> Result<Self::Input, Error> {
         content
