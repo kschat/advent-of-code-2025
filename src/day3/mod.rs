@@ -34,25 +34,20 @@ impl<'a> Problem<'a> for Day3 {
         let result = input
             .iter()
             .map(|bank| {
-                let (first, second) =
-                    bank.iter()
-                        .rev()
-                        .enumerate()
-                        .fold((0, 0), |(first, second), (i, digit)| {
-                            if i == 0 {
-                                return (first, *digit);
-                            }
+                let (first, second) = bank.iter().rev().skip(2).fold(
+                    (bank[bank.len() - 2], bank[bank.len() - 1]),
+                    |(first, second), digit| {
+                        if first > *digit {
+                            return (first, second);
+                        }
 
-                            if first <= *digit {
-                                if second < first {
-                                    return (*digit, first);
-                                } else {
-                                    return (*digit, second);
-                                }
-                            }
-
-                            (first, second)
-                        });
+                        if second < first {
+                            (*digit, first)
+                        } else {
+                            (*digit, second)
+                        }
+                    },
+                );
 
                 (first * 10) + second
             })
