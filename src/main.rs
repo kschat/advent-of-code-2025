@@ -4,6 +4,7 @@ use colored::Colorize;
 use day1::Day1;
 use day2::Day2;
 use day3::Day3;
+use day4::Day4;
 use error::Error;
 use runner::Runner;
 
@@ -16,6 +17,7 @@ mod runner;
 mod day1;
 mod day2;
 mod day3;
+mod day4;
 
 fn run() -> Result<(), Error> {
     match Cli::parse().command {
@@ -23,6 +25,7 @@ fn run() -> Result<(), Error> {
             1 => Runner::new(&config).run::<Day1>(),
             2 => Runner::new(&config).run::<Day2>(),
             3 => Runner::new(&config).run::<Day3>(),
+            4 => Runner::new(&config).run::<Day4>(),
             _ => Err(Error::Unimplemented),
         },
     }

@@ -33,11 +33,6 @@ impl<'a> Runner<'a> {
 
         let input = self.read_input(&problem, &mut metrics)?;
 
-        if self.config.verbose {
-            println!("{PADDING}Parsing output:");
-            println!("{PADDING}{input:#?}");
-        }
-
         let answer1 = match self.config.part {
             Part::One | Part::Both => {
                 let answer = metrics.track_part1(|| problem.part1(&input)).format();
