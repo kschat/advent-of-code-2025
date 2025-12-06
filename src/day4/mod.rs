@@ -9,7 +9,7 @@ pub struct Day4<'a> {
 impl<'a> Problem<'a> for Day4<'a> {
     type Input = Vec<Vec<char>>;
     type Answer1 = usize;
-    type Answer2 = u64;
+    type Answer2 = usize;
 
     fn init(config: &'a RunConfig) -> Self
     where
@@ -29,40 +29,78 @@ impl<'a> Problem<'a> for Day4<'a> {
     }
 
     fn part1(&self, input: &Self::Input) -> Result<Self::Answer1, Error> {
-        let result = input
+        let mut world = World::new(input, self.config.verbose);
+        let count = world.update();
+
+        Ok(count)
+    }
+
+    fn part2(&self, input: &Self::Input) -> Result<Self::Answer2, Error> {
+        let mut world = World::new(input, self.config.verbose);
+        let mut count = world.update();
+        let mut total = count;
+
+        while count > 0 {
+            count = world.update();
+            total += count;
+        }
+
+        Ok(total)
+    }
+}
+
+struct World {
+    map: Vec<Vec<char>>,
+    count: usize,
+    verbose: bool,
+}
+
+impl World {
+    pub fn new(world: &[Vec<char>], verbose: bool) -> Self {
+        Self {
+            map: world.to_vec(),
+            count: 0,
+            verbose,
+        }
+    }
+
+    pub fn update(&mut self) -> usize {
+        let map = self
+            .map
             .iter()
             .enumerate()
             .map(|(row_index, row)| {
-                if self.config.verbose {
+                if self.verbose {
                     println!();
                 }
 
                 row.iter()
+                    .map(|cell| if *cell == 'x' { '.' } else { *cell })
                     .enumerate()
-                    .map(move |(column_index, cell)| {
-                        if *cell == '.' {
-                            if self.config.verbose {
+                    .map(|(column_index, cell)| {
+                        if cell == '.' {
+                            if self.verbose {
                                 print!("{cell}");
                             }
 
-                            return *cell;
+                            return cell;
                         }
 
-                        let count = check_cell(input, row_index - 1, column_index - 1)
-                            + check_cell(input, row_index - 1, column_index)
-                            + check_cell(input, row_index - 1, column_index + 1)
-                            + check_cell(input, row_index, column_index + 1)
-                            + check_cell(input, row_index + 1, column_index + 1)
-                            + check_cell(input, row_index + 1, column_index)
-                            + check_cell(input, row_index + 1, column_index - 1)
-                            + check_cell(input, row_index, column_index - 1);
+                        let count = check_cell(&self.map, row_index - 1, column_index - 1)
+                            + check_cell(&self.map, row_index - 1, column_index)
+                            + check_cell(&self.map, row_index - 1, column_index + 1)
+                            + check_cell(&self.map, row_index, column_index + 1)
+                            + check_cell(&self.map, row_index + 1, column_index + 1)
+                            + check_cell(&self.map, row_index + 1, column_index)
+                            + check_cell(&self.map, row_index + 1, column_index - 1)
+                            + check_cell(&self.map, row_index, column_index - 1);
 
                         let cell = match count {
                             0..4 => 'x',
-                            _ => *cell,
+                            _ => cell,
                         };
 
-                        if self.config.verbose {
+                        if self.verbose {
                             print!("{cell}");
                         }
 
@@ -72,16 +110,19 @@ impl<'a> Problem<'a> for Day4<'a> {
             })
             .collect::<Vec<_>>();
 
-        if self.config.verbose {
+        if self.verbose {
             println!();
         }
 
-        let count = result
+        let count = map
             .iter()
             .map(|row| row.iter().filter(|c| **c == 'x').count())
             .sum();
 
-        Ok(count)
+        self.count = count;
+        self.map = map;
+
+        count
     }
 }
 

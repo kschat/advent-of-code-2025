@@ -5,6 +5,7 @@ use day1::Day1;
 use day2::Day2;
 use day3::Day3;
 use day4::Day4;
+use day5::Day5;
 use error::Error;
 use runner::Runner;
 
@@ -18,6 +19,7 @@ mod day1;
 mod day2;
 mod day3;
 mod day4;
+mod day5;
 
 fn run() -> Result<(), Error> {
     match Cli::parse().command {
@@ -26,6 +28,7 @@ fn run() -> Result<(), Error> {
             2 => Runner::new(&config).run::<Day2>(),
             3 => Runner::new(&config).run::<Day3>(),
             4 => Runner::new(&config).run::<Day4>(),
+            5 => Runner::new(&config).run::<Day5>(),
             _ => Err(Error::Unimplemented),
         },
     }
